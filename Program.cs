@@ -19,6 +19,7 @@
                 Console.Write("Enter an option from the menu: ");
 
                 string? userInput = Console.ReadLine();
+                Console.Clear();
                 switch (userInput)
                 {
                     case "1":

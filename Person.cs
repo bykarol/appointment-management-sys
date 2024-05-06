@@ -1,19 +1,35 @@
-namespace appointment_management_sys.Classes;
-public class Person
+namespace AppointmentManagementSys
 {
-  public string? FirstName { get; set; }
-  public string? LastName { get; set; }
-  public int Age { get; set; }
-
-  public Person(string firstName, string lastName, int age)
+  enum Gender
   {
-    FirstName = firstName;
-    LastName = lastName;
-    Age = age;
+    Male,
+    Female
   }
-
-  public virtual void DisplayInfo()
+  abstract class Person
   {
-    Console.WriteLine($"Name: {FirstName} {LastName}, Age: {Age}");
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public DateTime DateOfBirth { get; set; }
+    public Gender Gender { get; set; }
+    public string Address { get; set; }
+    public string PhoneNumber { get; set; }
+
+    public Person(string firstName, string lastName, DateTime dateOfBirth, Gender gender, string address, string phoneNumber)
+    {
+      FirstName = firstName;
+      LastName = lastName;
+      DateOfBirth = dateOfBirth;
+      Gender = gender;
+      Address = address;
+      PhoneNumber = phoneNumber;
+    }
+    public virtual void DisplayInformation()
+    {
+      Console.WriteLine($"FullName: {FirstName} {LastName}");
+      Console.WriteLine($"Date of Birth: {DateOfBirth.ToShortDateString()}");
+      Console.WriteLine($"Gender: {Gender}");
+      Console.WriteLine($"Address: {Address}");
+      Console.WriteLine($"Phone Number: {PhoneNumber}");
+    }
   }
 }
