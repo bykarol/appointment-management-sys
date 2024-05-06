@@ -12,3 +12,5 @@ obj/
 *.nuget
 *.nupkg
 packages/
+
+.fake
