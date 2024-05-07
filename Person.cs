@@ -1,3 +1,5 @@
+using System.Data.Common;
+
 namespace AppointmentManagementSys
 {
   enum Gender

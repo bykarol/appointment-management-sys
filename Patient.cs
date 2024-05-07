@@ -1,3 +1,5 @@
+using System.Data.Common;
+
 namespace AppointmentManagementSys
 {
   class Patient : Person // Inherit from the abstract class Person
