@@ -35,7 +35,7 @@ namespace AppointmentManagementSys
       }
     }
 
-    // Additional methods (Patients Management)
+    // Patients Management Methods
     static void RegisterPatient()
     {
       try
@@ -126,7 +126,45 @@ namespace AppointmentManagementSys
 
     static void UpdatePatientInformation()
     {
-      Console.WriteLine("Updating patient information...");
+      try
+      {
+        Console.WriteLine("Updating patient information...");
+        // Patient first name
+        Console.Write("First name of the patient to be updated: ");
+        string firstName = Console.ReadLine();
+        // Patient last name
+        Console.Write("Last name of the patient to be updated: ");
+        string lastName = Console.ReadLine();
+
+        // Validating firstname and lastname are not empty
+        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
+        {
+          throw new ArgumentException("First name and last name cannot be empty.");
+        }
+
+        // Find the index of patient to be updated
+        int index = patients.FindIndex(x => x.FirstName == firstName && x.LastName == lastName);
+        if (index == -1)
+        {
+          Console.WriteLine("Patient not found.");
+          return;
+        }
+
+        // Backup the patient info
+        Patient updatedPatient = UpdatePatientData(patients[index]);
+        // Remove the old patient from the list
+        patients.RemoveAt(index);
+
+        // Adding the updated patient to the list
+        patients.Insert(index, updatedPatient);
+
+        // show info updated
+        Console.WriteLine("Patient's data was succesfully updated!");
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"Error: {ex.Message}");
+      }
     }
 
     static void DeletePatient()
@@ -166,5 +204,77 @@ namespace AppointmentManagementSys
         Console.WriteLine($"Error: {ex.Message}");
       }
     }
+
+    // ADITIONAL METHODS (HELPERS)
+    // Function to update patient's data
+    static Patient UpdatePatientData(Patient patient)
+    {
+      Console.WriteLine($"\nPatient to update: {patient.FirstName} {patient.LastName}");
+      Console.WriteLine("What field do you want to update?");
+      Console.WriteLine("1. First Name");
+      Console.WriteLine("2. Last Name");
+      Console.WriteLine("3. Date of birth");
+      Console.WriteLine("4. Address");
+      Console.WriteLine("5. Phone Number");
+      Console.Write("Enter an option from the menu: ");
+      string userInput = Console.ReadLine();
+      string updatedData;
+
+      switch (userInput)
+      {
+        case "1":
+          Console.Write("Enter first name: ");
+          updatedData = Console.ReadLine();
+          if (string.IsNullOrWhiteSpace(updatedData))
+          {
+            throw new ArgumentException("First name cannot be empty.");
+          }
+          patient.FirstName = updatedData;
+          break;
+        case "2":
+          Console.Write("Enter last name: ");
+          updatedData = Console.ReadLine();
+          if (string.IsNullOrWhiteSpace(updatedData))
+          {
+            throw new ArgumentException("Last name cannot be empty.");
+          }
+          patient.LastName = updatedData;
+          break;
+        case "3":
+          Console.Write("Enter date of birth (YYYY-MM-DD): ");
+          updatedData = Console.ReadLine();
+          if (!DateTime.TryParse(updatedData, out DateTime dateOfBirth))
+          {
+            throw new FormatException("Invalid date format. Please use YYYY-MM-DD format.");
+          }
+          patient.DateOfBirth = dateOfBirth;
+          break;
+        case "4":
+          Console.Write("Enter address: ");
+          updatedData = Console.ReadLine();
+          if (string.IsNullOrWhiteSpace(updatedData))
+          {
+            throw new ArgumentException("Address cannot be empty.");
+          }
+          patient.Address = updatedData;
+          break;
+        case "5":
+          Console.Write("Enter phone number: ");
+          updatedData = Console.ReadLine();
+          if (string.IsNullOrWhiteSpace(updatedData))
+          {
+            throw new ArgumentException("Phone number cannot be empty.");
+          }
+          patient.PhoneNumber = updatedData;
+          break;
+        default:
+          Console.WriteLine("Invalid choice. Please try again.");
+          break;
+      }
+
+      return patient;
+    }
   }
 }
+
+
