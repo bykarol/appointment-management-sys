@@ -8,9 +8,11 @@ namespace AppointmentManagementSys
     {
       Console.WriteLine("\nPATIENTS MENU:");
       Console.WriteLine("1. Register New Patient");
-      Console.WriteLine("2. Search and Display Patient Information");
-      Console.WriteLine("3. Update Patient Information");
-      Console.WriteLine("4. Delete Patient");
+      Console.WriteLine("2. Add Medical Records");
+      Console.WriteLine("3. Display Patient Information");
+      Console.WriteLine("4. Update Patient Information");
+      Console.WriteLine("5. Delete Patient");
+      Console.WriteLine("6. Display Patient List");
       Console.Write("Enter an option from the menu: ");
 
       string? userInput = Console.ReadLine();
@@ -21,13 +23,19 @@ namespace AppointmentManagementSys
           RegisterPatient();
           break;
         case "2":
-          SearchAndDisplayPatient();
+          AddMedicalRecord();
           break;
         case "3":
-          UpdatePatientInformation();
+          SearchAndDisplayPatient();
           break;
         case "4":
+          UpdatePatientInformation();
+          break;
+        case "5":
           DeletePatient();
+          break;
+        case "6":
+          DisplayPatientList();
           break;
         default:
           Console.WriteLine("Invalid choice. Please try again.");
@@ -36,16 +44,16 @@ namespace AppointmentManagementSys
     }
 
     // Patients Management Methods
-    static void RegisterPatient()
+    private static void RegisterPatient()
     {
       try
       {
         Console.WriteLine("Registering a new patient...");
         // Gather info about the patient
         Console.Write("Enter first name: ");
-        string? firstName = Console.ReadLine();
+        string firstName = Console.ReadLine();
         Console.Write("Enter last name: ");
-        string? lastName = Console.ReadLine();
+        string lastName = Console.ReadLine();
         Console.Write("Enter date of birth (YYYY-MM-DD): ");
         if (!DateTime.TryParse(Console.ReadLine(), out DateTime dateOfBirth))
         {
@@ -57,20 +65,20 @@ namespace AppointmentManagementSys
           throw new ArgumentException("Invalid gender. Please enter Male or Female.");
         }
         Console.Write("Enter address: ");
-        string? address = Console.ReadLine();
+        string address = Console.ReadLine();
         Console.Write("Enter phone number: ");
-        string? phoneNumber = Console.ReadLine();
-        Console.Write("Enter medical history: ");
-        string? medicalHistory = Console.ReadLine();
+        string phoneNumber = Console.ReadLine();
+        // Console.Write("Enter medical history: ");
+        // string? medicalHistory = Console.ReadLine();
 
         // Data validation
-        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) || dateOfBirth == DateTime.MinValue || string.IsNullOrWhiteSpace(address) || string.IsNullOrWhiteSpace(phoneNumber) || string.IsNullOrWhiteSpace(medicalHistory))
+        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) || dateOfBirth == DateTime.MinValue || string.IsNullOrWhiteSpace(address) || string.IsNullOrWhiteSpace(phoneNumber))
         {
           throw new ArgumentException("All fields are required to register a new patient");
         }
 
         // Creating a new patient
-        Patient newPatient = new Patient(firstName, lastName, dateOfBirth, gender, address, phoneNumber, medicalHistory);
+        Patient newPatient = new Patient(firstName, lastName, dateOfBirth, gender, address, phoneNumber);
         // Adding the new patient to the list of patients
         patients.Add(newPatient);
         // Message to the user
@@ -81,18 +89,17 @@ namespace AppointmentManagementSys
         Console.WriteLine($"Error: {ex.Message}");
       }
     }
-
-    static void SearchAndDisplayPatient()
+    private static void AddMedicalRecord()
     {
       try
       {
-        Console.WriteLine("Searching and displaying patient information...");
+        Console.WriteLine("Adding a record to Medical History...");
         // Patient first name
         Console.Write("Type the first name of the patient: ");
-        string? firstName = Console.ReadLine();
+        string firstName = Console.ReadLine();
         // Patient last name
         Console.Write("Type the last name of the patient: ");
-        string? lastName = Console.ReadLine();
+        string lastName = Console.ReadLine();
 
         // Validating firstname and lastname are not empty
         if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
@@ -104,19 +111,58 @@ namespace AppointmentManagementSys
         Patient? patient = patients.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
 
         // Display the patient data
-        if (patient != null)
-        {
-          Console.WriteLine("###################################");
-          Console.WriteLine("Patient's Personal Data");
-          Console.WriteLine("###################################");
-          patient.DisplayInformation();
-          Console.WriteLine("###################################");
-        }
-        else
+        if (patient == null)
         {
           Console.WriteLine("No patient found with the provided information.");
+          return;
         }
 
+        Console.Write("Type the medical description: ");
+        string description = Console.ReadLine();
+        if (string.IsNullOrWhiteSpace(description))
+        {
+          throw new ArgumentException("Description cannot be empty.");
+        }
+        patient.AddMedicalRecord(description);
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"Error: {ex.Message}");
+      }
+    }
+    private static void SearchAndDisplayPatient()
+    {
+      try
+      {
+        Console.WriteLine("Searching and displaying patient information...");
+        // Patient first name
+        Console.Write("Type the first name of the patient: ");
+        string firstName = Console.ReadLine();
+        // Patient last name
+        Console.Write("Type the last name of the patient: ");
+        string lastName = Console.ReadLine();
+
+        // Validating firstname and lastname are not empty
+        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
+        {
+          throw new ArgumentException("First name and last name cannot be empty.");
+        }
+
+        // Look for the patient in the list of patients
+        Patient? patient = patients.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
+
+        // Display the patient data
+        if (patient == null)
+        {
+          Console.WriteLine("No patient found with the provided information.");
+          return;
+        }
+
+        Console.WriteLine("###################################");
+        Console.WriteLine("Patient's Personal Data");
+        Console.WriteLine("###################################");
+        patient.DisplayInformation();
+        Console.WriteLine("###################################");
       }
       catch (Exception ex)
       {
@@ -124,7 +170,7 @@ namespace AppointmentManagementSys
       }
     }
 
-    static void UpdatePatientInformation()
+    private static void UpdatePatientInformation()
     {
       try
       {
@@ -167,17 +213,17 @@ namespace AppointmentManagementSys
       }
     }
 
-    static void DeletePatient()
+    private static void DeletePatient()
     {
       try
       {
         Console.WriteLine("Deleting a patient...");
         // Patient first name
         Console.Write("Type the first name of the patient: ");
-        string? firstName = Console.ReadLine();
+        string firstName = Console.ReadLine();
         // Patient last name
         Console.Write("Type the last name of the patient: ");
-        string? lastName = Console.ReadLine();
+        string lastName = Console.ReadLine();
 
         // Validating firstname and lastname are not empty
         if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
@@ -205,9 +251,36 @@ namespace AppointmentManagementSys
       }
     }
 
+    private static void DisplayPatientList()
+    {
+      try
+      {
+        if (patients == null || patients.Count == 0)
+        {
+          Console.WriteLine("No patients found");
+          return;
+        }
+
+        Console.WriteLine($"Displaying Patient List...");
+        int counter = 1;
+        foreach (Patient patient in patients)
+        {
+          Console.WriteLine($"#{counter}");
+          patient?.DisplayInformation();
+          Console.WriteLine("******************************");
+          counter++;
+        }
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"Error: {ex.Message}");
+      }
+    }
+
+
     // ADITIONAL METHODS (HELPERS)
     // Function to update patient's data
-    static Patient UpdatePatientData(Patient patient)
+    private static Patient UpdatePatientData(Patient patient)
     {
       Console.WriteLine($"\nPatient to update: {patient.FirstName} {patient.LastName}");
       Console.WriteLine("What field do you want to update?");

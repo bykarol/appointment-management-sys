@@ -1,21 +1,42 @@
-using System.Data.Common;
-
 namespace AppointmentManagementSys
 {
   class Patient : Person // Inherit from the abstract class Person
   {
-    public string MedicalHistory { get; set; }
+    public List<MedicalHistory> History { get; }
 
-    public Patient(string firstName, string lastName, DateTime dateOfBirth, Gender gender, string address, string phoneNumber, string medicalHistory)
+    public Patient(string firstName, string lastName, DateTime dateOfBirth, Gender gender, string address, string phoneNumber)
         : base(firstName, lastName, dateOfBirth, gender, address, phoneNumber)
     {
-      MedicalHistory = medicalHistory;
+      History = new List<MedicalHistory>(); // empty list
     }
 
     public override void DisplayInformation()
     {
       base.DisplayInformation();
-      Console.WriteLine($"Medical History: {MedicalHistory}");
+      try
+      {
+        if (History != null && History.Count > 0)
+        {
+          Console.WriteLine($"Medical History:");
+          int counter = 1;
+          foreach (MedicalHistory record in History)
+          {
+            Console.WriteLine($"Record #{counter}.");
+            record.DisplayMedicalHistoryInfo();
+            counter++;
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"Error displaying medical history: {ex.Message}");
+      }
+    }
+
+    public void AddMedicalRecord(string description)
+    {
+      MedicalHistory record = new MedicalHistory(description);
+      History.Add(record);
     }
   }
 }
