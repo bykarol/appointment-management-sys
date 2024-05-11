@@ -3,19 +3,20 @@ namespace AppointmentManagementSys
   class PatientsManager
   {
     // List of patients
-    private static List<Patient> patients = new List<Patient>();
+    public static List<Patient> patients { get; set; } = new List<Patient>();
     public static void PatientsManagerMenu()
     {
       Console.WriteLine("\nPATIENTS MENU:");
       Console.WriteLine("1. Register New Patient");
       Console.WriteLine("2. Add Medical Records");
-      Console.WriteLine("3. Display Patient Information");
-      Console.WriteLine("4. Update Patient Information");
+      Console.WriteLine("3. View Patient Information");
+      Console.WriteLine("4. Edit Patient Information");
       Console.WriteLine("5. Delete Patient");
-      Console.WriteLine("6. Display Patient List");
+      Console.WriteLine("6. View Patient List");
+      Console.WriteLine("7. Return to Main Menu");
       Console.Write("Enter an option from the menu: ");
 
-      string? userInput = Console.ReadLine();
+      string userInput = Console.ReadLine();
       Console.Clear();
       switch (userInput)
       {
@@ -26,7 +27,7 @@ namespace AppointmentManagementSys
           AddMedicalRecord();
           break;
         case "3":
-          SearchAndDisplayPatient();
+          DisplayPatientInformation();
           break;
         case "4":
           UpdatePatientInformation();
@@ -36,6 +37,9 @@ namespace AppointmentManagementSys
           break;
         case "6":
           DisplayPatientList();
+          break;
+        case "7":
+          Console.WriteLine("Returning to main menu...");
           break;
         default:
           Console.WriteLine("Invalid choice. Please try again.");
@@ -68,8 +72,6 @@ namespace AppointmentManagementSys
         string address = Console.ReadLine();
         Console.Write("Enter phone number: ");
         string phoneNumber = Console.ReadLine();
-        // Console.Write("Enter medical history: ");
-        // string? medicalHistory = Console.ReadLine();
 
         // Data validation
         if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) || dateOfBirth == DateTime.MinValue || string.IsNullOrWhiteSpace(address) || string.IsNullOrWhiteSpace(phoneNumber))
@@ -94,70 +96,39 @@ namespace AppointmentManagementSys
       try
       {
         Console.WriteLine("Adding a record to Medical History...");
-        // Patient first name
-        Console.Write("Type the first name of the patient: ");
-        string firstName = Console.ReadLine();
-        // Patient last name
-        Console.Write("Type the last name of the patient: ");
-        string lastName = Console.ReadLine();
-
-        // Validating firstname and lastname are not empty
-        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
-        {
-          throw new ArgumentException("First name and last name cannot be empty.");
-        }
-
-        // Look for the patient in the list of patients
-        Patient? patient = patients.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
-
-        // Display the patient data
+        // Get the patient data
+        Patient patient = GetPatient();
         if (patient == null)
         {
           Console.WriteLine("No patient found with the provided information.");
           return;
         }
-
-        Console.Write("Type the medical description: ");
+        // Getting the medical description from user
+        Console.Write("Enter the medical description: ");
         string description = Console.ReadLine();
         if (string.IsNullOrWhiteSpace(description))
         {
           throw new ArgumentException("Description cannot be empty.");
         }
+        // Adding MedicalRecord to patient
         patient.AddMedicalRecord(description);
+        Console.WriteLine("Medical record added successfully!");
       }
       catch (Exception ex)
       {
         Console.WriteLine($"Error: {ex.Message}");
       }
     }
-    private static void SearchAndDisplayPatient()
+    private static void DisplayPatientInformation()
     {
       try
       {
-        Console.WriteLine("Searching and displaying patient information...");
-        // Patient first name
-        Console.Write("Type the first name of the patient: ");
-        string firstName = Console.ReadLine();
-        // Patient last name
-        Console.Write("Type the last name of the patient: ");
-        string lastName = Console.ReadLine();
-
-        // Validating firstname and lastname are not empty
-        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
-        {
-          throw new ArgumentException("First name and last name cannot be empty.");
-        }
-
-        // Look for the patient in the list of patients
-        Patient? patient = patients.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
-
-        // Display the patient data
+        // Get the patient data
+        Patient patient = GetPatient();
         if (patient == null)
         {
-          Console.WriteLine("No patient found with the provided information.");
           return;
         }
-
         Console.WriteLine("###################################");
         Console.WriteLine("Patient's Personal Data");
         Console.WriteLine("###################################");
@@ -218,22 +189,7 @@ namespace AppointmentManagementSys
       try
       {
         Console.WriteLine("Deleting a patient...");
-        // Patient first name
-        Console.Write("Type the first name of the patient: ");
-        string firstName = Console.ReadLine();
-        // Patient last name
-        Console.Write("Type the last name of the patient: ");
-        string lastName = Console.ReadLine();
-
-        // Validating firstname and lastname are not empty
-        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
-        {
-          throw new ArgumentException("First name and last name cannot be empty.");
-        }
-
-        // Look for the patient in the list of patients
-        Patient? patientToDelete = patients.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
-
+        Patient patientToDelete = GetPatient();
         if (patientToDelete != null)
         {
           // Delete the patient from patients list
@@ -255,7 +211,7 @@ namespace AppointmentManagementSys
     {
       try
       {
-        if (patients == null || patients.Count == 0)
+        if (patients.Count == 0)
         {
           Console.WriteLine("No patients found");
           return;
@@ -345,6 +301,34 @@ namespace AppointmentManagementSys
           break;
       }
 
+      return patient;
+    }
+    public static Patient GetPatient()
+    {
+      Console.WriteLine("Searching patient...");
+      // Patient first name
+      Console.Write("Type the first name of the patient: ");
+      string firstName = Console.ReadLine();
+      // Patient last name
+      Console.Write("Type the last name of the patient: ");
+      string lastName = Console.ReadLine();
+
+      // Validating firstname and lastname are not empty
+      if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
+      {
+        throw new ArgumentException("First name and last name cannot be empty.");
+      }
+
+      // Look for the patient in the list of patients
+      Patient? patient = patients.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
+
+      // Display the patient data
+      if (patient == null)
+      {
+        Console.WriteLine("No patient found with the provided information.");
+        return null;
+      }
+      AppointmentsManager appointmentsManager = new AppointmentsManager(patients);
       return patient;
     }
   }

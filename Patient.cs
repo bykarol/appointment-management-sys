@@ -3,11 +3,13 @@ namespace AppointmentManagementSys
   class Patient : Person // Inherit from the abstract class Person
   {
     public List<MedicalHistory> History { get; }
+    // public List<Appointment> Appointments { get; set; }
 
     public Patient(string firstName, string lastName, DateTime dateOfBirth, Gender gender, string address, string phoneNumber)
         : base(firstName, lastName, dateOfBirth, gender, address, phoneNumber)
     {
       History = new List<MedicalHistory>(); // empty list
+      // Appointments = new List<Appointment>();
     }
 
     public override void DisplayInformation()
@@ -26,6 +28,19 @@ namespace AppointmentManagementSys
             counter++;
           }
         }
+
+        // if (Appointments != null && Appointments.Count > 0)
+        // {
+        //   Console.WriteLine("***********************");
+        //   Console.WriteLine($"Appointments:");
+        //   int counter = 1;
+        //   foreach (Appointment appointment in Appointments)
+        //   {
+        //     Console.WriteLine($"Appointment #{counter}.");
+        //     appointment.DisplayAppointmentInfo();
+        //     counter++;
+        //   }
+        // }
       }
       catch (Exception ex)
       {
@@ -38,5 +53,7 @@ namespace AppointmentManagementSys
       MedicalHistory record = new MedicalHistory(description);
       History.Add(record);
     }
+
+
   }
 }

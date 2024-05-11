@@ -4,6 +4,7 @@ namespace AppointmentManagementSys
   {
     public DateTime Date { get; }
     public string Description { get; }
+    // public Doctor Doctor { get; }
 
     public MedicalHistory(string description)
     {

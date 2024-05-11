@@ -27,7 +27,7 @@
                         break;
                     case "2":
                         Console.WriteLine("Manage Appointments Menu");
-                        // ManageAppointmentsMenu();
+                        AppointmentsManager.AppointmentsManagerMenu();
                         break;
                     case "3":
                         Console.WriteLine("Thank you for using the Appointment Management System. Goodbye!");
