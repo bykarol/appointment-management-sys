@@ -190,16 +190,13 @@ namespace AppointmentManagementSys
       {
         Console.WriteLine("Deleting a patient...");
         Patient patientToDelete = GetPatient();
-        if (patientToDelete != null)
+        if (patientToDelete == null)
         {
-          // Delete the patient from patients list
-          patients.Remove(patientToDelete);
-          Console.WriteLine($"Patient {patientToDelete.FirstName} {patientToDelete.LastName} was successfully deleted.");
+          return;
         }
-        else
-        {
-          Console.WriteLine("No patient found with the provided information.");
-        }
+        // Delete the patient from patients list
+        patients.Remove(patientToDelete);
+        Console.WriteLine($"Patient {patientToDelete.FirstName} {patientToDelete.LastName} was successfully deleted.");
       }
       catch (Exception ex)
       {
