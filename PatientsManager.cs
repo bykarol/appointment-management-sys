@@ -4,6 +4,7 @@ namespace AppointmentManagementSys
   {
     // List of patients
     public static List<Patient> patients { get; set; } = new List<Patient>();
+    AppointmentsManager appointmentsManager = new AppointmentsManager(patients);
     public static void PatientsManagerMenu()
     {
       Console.WriteLine("\nPATIENTS MENU:");
@@ -325,7 +326,7 @@ namespace AppointmentManagementSys
         Console.WriteLine("No patient found with the provided information.");
         return null;
       }
-      AppointmentsManager appointmentsManager = new AppointmentsManager(patients);
+
       return patient;
     }
   }
